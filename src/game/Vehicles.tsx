@@ -1,5 +1,6 @@
 import { useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import type { Car } from "./types";
 
 /** Procedural Lagos public-transport fleet with painted canvas liveries: Danfo, BRT, Keke Napep, Okada. Models face +Z. */
@@ -91,18 +92,62 @@ const tmat = (t: THREE.Texture) => {
   return m;
 };
 
+/** Mid-poly: boxes get bevelled edges (cached RoundedBoxGeometry), wheels get tyre/rim/spokes/hub. */
+const G = new Map<string, THREE.BufferGeometry>();
+function rbox(s: [number, number, number]) {
+  const k = s.join(",");
+  let g: THREE.BufferGeometry | undefined = G.get(k);
+  if (!g) {
+    const min = Math.min(...s);
+    g = min < 0.08 ? new THREE.BoxGeometry(...s) : new RoundedBoxGeometry(s[0], s[1], s[2], 3, Math.min(0.12, min * 0.18));
+    G.set(k, g);
+  }
+  return g!;
+}
 function Bx({ s, p, m, r }: { s: [number, number, number]; p: [number, number, number]; m: THREE.Material; r?: [number, number, number] }) {
-  return <mesh position={p} rotation={r ?? [0, 0, 0]} material={m} castShadow><boxGeometry args={s} /></mesh>;
+  return <mesh position={p} rotation={r ?? [0, 0, 0]} material={m} geometry={rbox(s)} castShadow />;
 }
 function Pl({ s, p, ry, m }: { s: [number, number]; p: [number, number, number]; ry: number; m: THREE.Material }) {
   return <mesh position={p} rotation-y={ry} material={m}><planeGeometry args={s} /></mesh>;
 }
 function Wheel({ p, r = 0.42, w = 0.3 }: { p: [number, number, number]; r?: number; w?: number }) {
+  const rubber = mat("#151515", 0, 0.9), rim = mat("#b8bcc0", 0.8, 0.3), dark = mat("#3a3d40", 0.6, 0.4);
   return (
     <group position={p}>
-      <mesh rotation-z={Math.PI / 2} material={mat("#151515", 0, 0.9)} castShadow><cylinderGeometry args={[r, r, w, 14]} /></mesh>
-      <mesh rotation-z={Math.PI / 2} material={mat("#b8bcc0", 0.8, 0.3)}><cylinderGeometry args={[r * 0.55, r * 0.55, w + 0.02, 10]} /></mesh>
+      <mesh rotation-z={Math.PI / 2} material={rubber} castShadow><cylinderGeometry args={[r * 0.92, r * 0.92, w, 32]} /></mesh>
+      <mesh rotation-y={Math.PI / 2} material={rubber}><torusGeometry args={[r * 0.82, r * 0.18, 10, 32]} /></mesh>
+      <mesh rotation-z={Math.PI / 2} material={dark}><cylinderGeometry args={[r * 0.6, r * 0.6, w + 0.01, 24]} /></mesh>
+      {[-1, 1].map((sd) => (
+        <group key={sd} position={[sd * (w / 2 + 0.01), 0, 0]}>
+          <mesh rotation-z={Math.PI / 2} material={rim}><cylinderGeometry args={[r * 0.15, r * 0.15, 0.04, 16]} /></mesh>
+          {[0, 1, 2, 3, 4].map((i) => (
+            <mesh key={i} rotation-x={(i / 5) * Math.PI * 2} material={rim}><boxGeometry args={[0.02, r * 0.95, r * 0.12]} /></mesh>
+          ))}
+          <mesh rotation-y={Math.PI / 2} material={rim}><torusGeometry args={[r * 0.55, r * 0.05, 6, 24]} /></mesh>
+        </group>
+      ))}
     </group>
+  );
+}
+function Mirror({ p, side }: { p: [number, number, number]; side: 1 | -1 }) {
+  return (
+    <group position={p}>
+      <Bx s={[0.22, 0.03, 0.03]} p={[side * 0.11, 0, 0]} m={mat("#222")} />
+      <Bx s={[0.06, 0.22, 0.14]} p={[side * 0.24, 0, 0]} m={mat("#222")} />
+      <Bx s={[0.01, 0.18, 0.11]} p={[side * 0.24, 0, -0.075]} m={mat("#cfe3ef", 1, 0.05)} />
+    </group>
+  );
+}
+function Seats({ w, z0, rows, y, gap = 0.9, c = "#5a2e1e" }: { w: number; z0: number; rows: number; y: number; gap?: number; c?: string }) {
+  return (
+    <>
+      {Array.from({ length: rows }, (_, i) => (
+        <group key={i} position={[0, y, z0 - i * gap]}>
+          <Bx s={[w, 0.12, 0.45]} p={[0, 0, 0]} m={mat(c)} />
+          <Bx s={[w, 0.5, 0.1]} p={[0, 0.3, -0.2]} m={mat(c)} />
+        </group>
+      ))}
+    </>
   );
 }
 const GLASS = () => mat("#1c2630", 0.4, 0.15);
@@ -129,6 +174,11 @@ function Danfo({ v }: { v: number }) {
       <Bx s={[0.04, 1.4, 1.0]} p={[1.07, 1.25, 0.6]} m={mat("#111")} />
       <Bx s={[0.35, 0.8, 0.3]} p={[1.25, 1.55, 0.6]} m={mat("#e63946")} />
       <Bx s={[0.25, 0.25, 0.25]} p={[1.25, 2.1, 0.6]} m={mat("#6b4226")} />
+      <Mirror p={[1.05, 1.9, 2.3]} side={1} /><Mirror p={[-1.05, 1.9, 2.3]} side={-1} />
+      <Seats w={1.8} z0={1.6} rows={4} y={0.85} />
+      <Bx s={[0.5, 0.4, 0.4]} p={[0.5, 1.15, 2.15]} m={mat("#222")} />
+      <mesh position={[0.5, 1.45, 1.95]} rotation-x={-1.1} material={mat("#111")}><torusGeometry args={[0.18, 0.025, 8, 24]} /></mesh>
+      <Bx s={[2.15, 0.25, 0.2]} p={[0, 0.55, -2.5]} m={mat("#2a2a2a")} />
       <Wheel p={[1.0, 0.42, 1.55]} /><Wheel p={[-1.0, 0.42, 1.55]} /><Wheel p={[1.0, 0.42, -1.55]} /><Wheel p={[-1.0, 0.42, -1.55]} />
     </>
   );
@@ -144,6 +194,10 @@ function Brt({ v }: { v: number }) {
       <Pl s={[2.55, 3.0]} p={[0, 1.85, 5.901]} ry={0} m={front} />
       <Pl s={[2.55, 3.0]} p={[0, 1.85, -5.901]} ry={Math.PI} m={front} />
       <Bx s={[1.8, 0.35, 3.0]} p={[0, 3.5, -2]} m={mat("#cfcfcf", 0.4, 0.4)} />
+      <Mirror p={[1.28, 2.6, 5.7]} side={1} /><Mirror p={[-1.28, 2.6, 5.7]} side={-1} />
+      <Seats w={2.2} z0={4.2} rows={10} y={0.95} gap={0.95} c="#1d3a6b" />
+      <Bx s={[2.6, 0.3, 0.25]} p={[0, 0.45, 5.95]} m={mat("#333")} />
+      <Bx s={[2.6, 0.3, 0.25]} p={[0, 0.45, -5.95]} m={mat("#333")} />
       {[4.3, -3.6, -4.8].map((z) => [1.15, -1.15].map((x) => <Wheel key={`${x}${z}`} p={[x, 0.5, z]} r={0.5} w={0.35} />))}
     </>
   );
@@ -169,6 +223,7 @@ function Keke({ v }: { v: number }) {
       <Bx s={[0.22, 0.22, 0.22]} p={[0, 1.88, 0.7]} m={mat("#6b4226")} />
       <Bx s={[0.6, 0.06, 0.06]} p={[0, 1.35, 1.1]} m={chrome} />
       <Bx s={[0.22, 0.15, 0.04]} p={[0, 1.15, 1.31]} m={mat("#fff6c0")} />
+      <Mirror p={[0.35, 1.38, 1.1]} side={1} /><Mirror p={[-0.35, 1.38, 1.1]} side={-1} />
       <Wheel p={[0, 0.3, 1.15]} r={0.3} w={0.15} /><Wheel p={[0.62, 0.3, -0.75]} r={0.3} w={0.18} /><Wheel p={[-0.62, 0.3, -0.75]} r={0.3} w={0.18} />
     </>
   );
