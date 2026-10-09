@@ -1,5 +1,6 @@
 import { useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import type { Car } from "./types";
 
 /** Procedural Lagos public-transport fleet with painted canvas liveries: Danfo, BRT, Keke Napep, Okada. Models face +Z. */
@@ -173,6 +174,11 @@ function Danfo({ v }: { v: number }) {
       <Bx s={[0.04, 1.4, 1.0]} p={[1.07, 1.25, 0.6]} m={mat("#111")} />
       <Bx s={[0.35, 0.8, 0.3]} p={[1.25, 1.55, 0.6]} m={mat("#e63946")} />
       <Bx s={[0.25, 0.25, 0.25]} p={[1.25, 2.1, 0.6]} m={mat("#6b4226")} />
+      <Mirror p={[1.05, 1.9, 2.3]} side={1} /><Mirror p={[-1.05, 1.9, 2.3]} side={-1} />
+      <Seats w={1.8} z0={1.6} rows={4} y={0.85} />
+      <Bx s={[0.5, 0.4, 0.4]} p={[0.5, 1.15, 2.15]} m={mat("#222")} />
+      <mesh position={[0.5, 1.45, 1.95]} rotation-x={-1.1} material={mat("#111")}><torusGeometry args={[0.18, 0.025, 8, 24]} /></mesh>
+      <Bx s={[2.15, 0.25, 0.2]} p={[0, 0.55, -2.5]} m={mat("#2a2a2a")} />
       <Wheel p={[1.0, 0.42, 1.55]} /><Wheel p={[-1.0, 0.42, 1.55]} /><Wheel p={[1.0, 0.42, -1.55]} /><Wheel p={[-1.0, 0.42, -1.55]} />
     </>
   );
@@ -188,6 +194,10 @@ function Brt({ v }: { v: number }) {
       <Pl s={[2.55, 3.0]} p={[0, 1.85, 5.901]} ry={0} m={front} />
       <Pl s={[2.55, 3.0]} p={[0, 1.85, -5.901]} ry={Math.PI} m={front} />
       <Bx s={[1.8, 0.35, 3.0]} p={[0, 3.5, -2]} m={mat("#cfcfcf", 0.4, 0.4)} />
+      <Mirror p={[1.28, 2.6, 5.7]} side={1} /><Mirror p={[-1.28, 2.6, 5.7]} side={-1} />
+      <Seats w={2.2} z0={4.2} rows={10} y={0.95} gap={0.95} c="#1d3a6b" />
+      <Bx s={[2.6, 0.3, 0.25]} p={[0, 0.45, 5.95]} m={mat("#333")} />
+      <Bx s={[2.6, 0.3, 0.25]} p={[0, 0.45, -5.95]} m={mat("#333")} />
       {[4.3, -3.6, -4.8].map((z) => [1.15, -1.15].map((x) => <Wheel key={`${x}${z}`} p={[x, 0.5, z]} r={0.5} w={0.35} />))}
     </>
   );
@@ -213,6 +223,7 @@ function Keke({ v }: { v: number }) {
       <Bx s={[0.22, 0.22, 0.22]} p={[0, 1.88, 0.7]} m={mat("#6b4226")} />
       <Bx s={[0.6, 0.06, 0.06]} p={[0, 1.35, 1.1]} m={chrome} />
       <Bx s={[0.22, 0.15, 0.04]} p={[0, 1.15, 1.31]} m={mat("#fff6c0")} />
+      <Mirror p={[0.35, 1.38, 1.1]} side={1} /><Mirror p={[-0.35, 1.38, 1.1]} side={-1} />
       <Wheel p={[0, 0.3, 1.15]} r={0.3} w={0.15} /><Wheel p={[0.62, 0.3, -0.75]} r={0.3} w={0.18} /><Wheel p={[-0.62, 0.3, -0.75]} r={0.3} w={0.18} />
     </>
   );
