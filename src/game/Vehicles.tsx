@@ -96,13 +96,13 @@ const tmat = (t: THREE.Texture) => {
 const G = new Map<string, THREE.BufferGeometry>();
 function rbox(s: [number, number, number]) {
   const k = s.join(",");
-  let g = G.get(k);
+  let g: THREE.BufferGeometry | undefined = G.get(k);
   if (!g) {
     const min = Math.min(...s);
     g = min < 0.08 ? new THREE.BoxGeometry(...s) : new RoundedBoxGeometry(s[0], s[1], s[2], 3, Math.min(0.12, min * 0.18));
     G.set(k, g);
   }
-  return g;
+  return g!;
 }
 function Bx({ s, p, m, r }: { s: [number, number, number]; p: [number, number, number]; m: THREE.Material; r?: [number, number, number] }) {
   return <mesh position={p} rotation={r ?? [0, 0, 0]} material={m} geometry={rbox(s)} castShadow />;
