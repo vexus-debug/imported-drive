@@ -13,6 +13,7 @@ import { createState, step } from "./sim";
 import { SPECS, type GameState, type Input } from "./types";
 import { buildWorld, type World } from "./world";
 import { TouchControls } from "./TouchControls";
+import { GrassTufts, PowerLines, RoofClutter } from "./Streetscape";
 
 function Sim({ S, W, input, audio }: { S: GameState; W: World; input: React.RefObject<Input>; audio: GameAudio }) {
   const sun = useRef<THREE.DirectionalLight>(null);

@@ -150,19 +150,19 @@ export function RealPed({ ped }: { ped: Ped }) {
     <group ref={ref}>
       <group ref={figure}>
         <mesh position={[0, 1.2, 0]} material={cloth} castShadow>
-          <capsuleGeometry args={[0.225, 0.42, 4, 9]} />
+          <capsuleGeometry args={[0.225, 0.42, 8, 20]} />
         </mesh>
         <mesh position={[0, 0.92, 0]} material={wrapper} castShadow>
-          <cylinderGeometry args={[0.3, ped.id % 2 === 0 ? 0.34 : 0.29, 0.5, 9, 1]} />
+          <cylinderGeometry args={[0.3, ped.id % 2 === 0 ? 0.34 : 0.29, 0.5, 20, 2]} />
         </mesh>
         <mesh position={[0, 1.505, 0]} material={skin} castShadow>
           <cylinderGeometry args={[0.075, 0.085, 0.13, 8]} />
         </mesh>
         <mesh position={[0, 1.69, 0]} material={skin} castShadow>
-          <sphereGeometry args={[0.152, 12, 10]} />
+          <sphereGeometry args={[0.152, 24, 18]} />
         </mesh>
         <mesh position={[0, 1.79, -0.012]} material={hair} castShadow>
-          <sphereGeometry args={[0.154, 10, 7, 0, Math.PI * 2, 0, Math.PI * 0.47]} />
+          <sphereGeometry args={[0.154, 22, 12, 0, Math.PI * 2, 0, Math.PI * 0.47]} />
         </mesh>
         {[-1, 1].map((side) => (
           <group key={side}>
@@ -189,34 +189,34 @@ export function RealPed({ ped }: { ped: Ped }) {
         )}
         <group ref={leftArm} position={[-0.27, 1.39, 0]}>
           <mesh position={[0, -0.19, 0]} rotation={[0, 0, -0.12]} material={cloth} castShadow>
-            <capsuleGeometry args={[0.09, 0.32, 3, 7]} />
+            <capsuleGeometry args={[0.09, 0.32, 6, 14]} />
           </mesh>
           <mesh position={[0, -0.48, 0]} material={skin} castShadow>
-            <capsuleGeometry args={[0.065, 0.27, 3, 7]} />
+            <capsuleGeometry args={[0.065, 0.27, 6, 14]} />
           </mesh>
         </group>
         <group ref={rightArm} position={[0.27, 1.39, 0]}>
           <mesh position={[0, -0.19, 0]} rotation={[0, 0, 0.12]} material={cloth} castShadow>
-            <capsuleGeometry args={[0.09, 0.32, 3, 7]} />
+            <capsuleGeometry args={[0.09, 0.32, 6, 14]} />
           </mesh>
           <mesh position={[0, -0.48, 0]} material={skin} castShadow>
-            <capsuleGeometry args={[0.065, 0.27, 3, 7]} />
+            <capsuleGeometry args={[0.065, 0.27, 6, 14]} />
           </mesh>
         </group>
         <group ref={leftLeg} position={[-0.12, 0.76, 0]}>
           <mesh position={[0, -0.31, 0]} material={trousers} castShadow>
-            <capsuleGeometry args={[0.105, 0.38, 3, 7]} />
+            <capsuleGeometry args={[0.105, 0.38, 6, 14]} />
           </mesh>
           <mesh position={[0, -0.66, 0.065]} material={shoe} castShadow>
-            <capsuleGeometry args={[0.07, 0.12, 2, 6]} />
+            <capsuleGeometry args={[0.07, 0.12, 6, 14]} />
           </mesh>
         </group>
         <group ref={rightLeg} position={[0.12, 0.76, 0]}>
           <mesh position={[0, -0.31, 0]} material={trousers} castShadow>
-            <capsuleGeometry args={[0.105, 0.38, 3, 7]} />
+            <capsuleGeometry args={[0.105, 0.38, 6, 14]} />
           </mesh>
           <mesh position={[0, -0.66, 0.065]} material={shoe} castShadow>
-            <capsuleGeometry args={[0.07, 0.12, 2, 6]} />
+            <capsuleGeometry args={[0.07, 0.12, 6, 14]} />
           </mesh>
         </group>
       </group>
