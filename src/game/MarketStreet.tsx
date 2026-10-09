@@ -43,6 +43,7 @@ type I = { p: [number, number, number]; s: [number, number, number]; ry?: number
 function Inst({ items, geo, mat, cast = true }: { items: I[]; geo: THREE.BufferGeometry; mat: THREE.Material; cast?: boolean }) {
   const ref = useRef<THREE.InstancedMesh>(null);
   useLayoutEffect(() => {
+    if (!ref.current) return;
     const m = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), c = new THREE.Color(), v = new THREE.Vector3(), s = new THREE.Vector3();
     items.forEach((it, i) => {
       ref.current!.setMatrixAt(i, m.compose(v.set(...it.p), q.setFromEuler(e.set(it.rx ?? 0, it.ry ?? 0, 0)), s.set(...it.s)));
