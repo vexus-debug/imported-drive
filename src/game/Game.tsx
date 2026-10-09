@@ -193,6 +193,9 @@ export function Game() {
       <Canvas shadows dpr={[1, 1.5]} camera={{ fov: 75, near: 0.1, far: 700, position: [10, 1.65, 20] }}>
         <WorldMesh W={W} />
         <LagosDetails W={W} />
+        <PowerLines W={W} />
+        <RoofClutter W={W} />
+        <GrassTufts W={W} />
         <LagosHeritage W={W} />
         <MarketStreet W={W} />
         <Suspense fallback={null}>
