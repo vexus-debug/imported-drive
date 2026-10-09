@@ -13,6 +13,7 @@ import { createState, step } from "./sim";
 import { SPECS, type GameState, type Input } from "./types";
 import { buildWorld, type World } from "./world";
 import { TouchControls } from "./TouchControls";
+import { GrassTufts, PowerLines, RoofClutter } from "./Streetscape";
 
 function Sim({ S, W, input, audio }: { S: GameState; W: World; input: React.RefObject<Input>; audio: GameAudio }) {
   const sun = useRef<THREE.DirectionalLight>(null);
@@ -192,6 +193,9 @@ export function Game() {
       <Canvas shadows dpr={[1, 1.5]} camera={{ fov: 75, near: 0.1, far: 700, position: [10, 1.65, 20] }}>
         <WorldMesh W={W} />
         <LagosDetails W={W} />
+        <PowerLines W={W} />
+        <RoofClutter W={W} />
+        <GrassTufts W={W} />
         <LagosHeritage W={W} />
         <MarketStreet W={W} />
         <Suspense fallback={null}>

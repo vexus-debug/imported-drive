@@ -131,10 +131,10 @@ export function LagosDetails({ W }: { W: World }) {
         <boxGeometry />
       </instancedMesh>
       <instancedMesh ref={pole} args={[undefined, undefined, W.poles.length]} castShadow>
-        <cylinderGeometry args={[0.12, 0.18, 9, 6]} />
+        <cylinderGeometry args={[0.12, 0.18, 9, 14]} />
         <meshLambertMaterial color="#a39e93" />
       </instancedMesh>
-      <instancedMesh ref={arm} args={[undefined, undefined, W.poles.length]}>
+      <instancedMesh ref={arm} args={[undefined, undefined, W.poles.length]} count={0}>
         <boxGeometry args={[1.8, 0.1, 0.1]} />
         <meshLambertMaterial color="#555" />
       </instancedMesh>

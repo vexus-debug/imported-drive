@@ -179,11 +179,11 @@ export function WorldMesh({ W }: { W: World }) {
       <Buildings W={W} />
       <OldTown W={W} />
       <instancedMesh ref={trunkRef} args={[undefined, undefined, W.palms.length]} castShadow>
-        <cylinderGeometry args={[0.18, 0.3, 7, 5]} />
+        <cylinderGeometry args={[0.18, 0.3, 7, 12, 6]} />
         <meshLambertMaterial color="#8a6a45" flatShading />
       </instancedMesh>
       <instancedMesh ref={leafRef} args={[undefined, undefined, W.palms.length * 6]} castShadow>
-        <boxGeometry args={[0.9, 0.08, 3]} />
+        <boxGeometry args={[0.9, 0.08, 3, 3, 1, 8]} />
         <meshLambertMaterial color="#3f9b3a" flatShading />
       </instancedMesh>
       <instancedMesh ref={tableRef} args={[undefined, undefined, W.stalls.length]} castShadow>
